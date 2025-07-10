@@ -301,16 +301,15 @@ const About: React.FC = () => {
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-8 max-w-2xl mx-auto">
               <h3 className="text-2xl font-bold text-amber-900 mb-4">Contact for Catering Services</h3>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a
-                  href="tel:+254735756923"
+               <a
+                  href="/contact"
                   className="flex items-center space-x-2 bg-amber-600 text-white px-6 py-3 rounded-lg hover:bg-amber-700 transition-colors"
-                >
+                 >
                   <Phone className="h-5 w-5" />
-                  <span>0735 756923</span>
+                  Call Us
                 </a>
-                <p className="text-amber-800">
-                  📍 Nyeri, opposite Wamuti Distributors on your way to King'ong'o near Chania Bridge
-                </p>
+
+                
               </div>
             </div>
           </div>

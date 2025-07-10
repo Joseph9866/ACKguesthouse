@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Mail, MapPin, MessageCircle, Facebook, Instagram } from 'lucide-react';
+import { Phone, Mail, MapPin, MessageCircle, Facebook, } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
@@ -59,9 +59,7 @@ const Footer: React.FC = () => {
               <a href="#" className="bg-amber-600 p-2 rounded-full hover:bg-amber-700 transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="bg-amber-600 p-2 rounded-full hover:bg-amber-700 transition-colors">
-                <Instagram className="h-5 w-5" />
-              </a>
+              
               <a href="https://wa.me/254720577442" className="bg-green-600 p-2 rounded-full hover:bg-green-700 transition-colors">
                 <MessageCircle className="h-5 w-5" />
               </a>
