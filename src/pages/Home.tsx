@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Star, Wifi, Coffee, Car, Users, MapPin, CheckCircle } from 'lucide-react';
+import { Star, Wifi, Coffee, Car, Users, CheckCircle } from 'lucide-react';
 
 const Home: React.FC = () => {
   const features = [
@@ -20,7 +20,7 @@ const Home: React.FC = () => {
     {
       name: 'Michael Chen',
       rating: 5,
-      comment: 'Perfect location for exploring Naivasha. The guest house exceeded our expectations in every way.',
+      comment: 'Perfect location for exploring Nyeri. The guest house exceeded our expectations in every way.',
       date: '1 month ago'
     },
     {
@@ -38,7 +38,8 @@ const Home: React.FC = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url('/Images/ACK1.webp')`
+            backgroundImage: `url('/Images/ACKview.jpeg')`
+          
 
 
           }}
@@ -128,7 +129,7 @@ const Home: React.FC = () => {
             </div>
             <div className="relative">
               <img
-                src="/Images/ACK2.webp"
+                src="/Images/ACKcompound2.jpeg"
                 alt="Guest house exterior"
                 className="rounded-lg shadow-lg"
               />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Wifi, Coffee, Car, Tv, Bath, CheckCircle, Calendar, AlertCircle } from 'lucide-react';
+import { Users, Wifi, Coffee, Tv, Bath, CheckCircle, Calendar, AlertCircle } from 'lucide-react';
 import { useRooms } from '../hooks/useRooms';
 import type { RoomWithAvailability } from '../hooks/useRooms';
 
@@ -18,6 +18,7 @@ const Rooms: React.FC = () => {
     'Mini Fridge': Coffee,
     'Coffee Machine': Coffee,
   };
+  
 
   const getMinDate = () => {
     const today = new Date();

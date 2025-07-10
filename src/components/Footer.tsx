@@ -13,8 +13,8 @@ const Footer: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-amber-400" />
                 <div>
-                  <div>+254 759 750 318</div>
-                  <div className="text-sm">Catering: 0735 756923</div>
+                  <div>+254 735 756923</div>
+                  
                 </div>
               </div>
               <div className="flex items-center space-x-3">
@@ -47,8 +47,8 @@ const Footer: React.FC = () => {
               <li>Free Wi-Fi</li>
               <li>Breakfast Service</li>
               <li>24/7 Reception</li>
-              <li>Tour Arrangements</li>
-              <li>Airport Transfer</li>
+              <li>Room Service</li>
+              <li>Conference Facilities</li>
             </ul>
           </div>
 
@@ -62,12 +62,12 @@ const Footer: React.FC = () => {
               <a href="#" className="bg-amber-600 p-2 rounded-full hover:bg-amber-700 transition-colors">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="https://wa.me/254712345678" className="bg-green-600 p-2 rounded-full hover:bg-green-700 transition-colors">
+              <a href="https://wa.me/254720577442" className="bg-green-600 p-2 rounded-full hover:bg-green-700 transition-colors">
                 <MessageCircle className="h-5 w-5" />
               </a>
             </div>
             <a
-              href="https://wa.me/254712345678?text=Hi, I'd like to make a booking at Serenity Haven Guest House"
+              href="https://wa.me/254720577442?text=Hi, I'd like to make a booking at ACK Mt Kenya Guest House"
               className="inline-flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
             >
               <MessageCircle className="h-4 w-4" />

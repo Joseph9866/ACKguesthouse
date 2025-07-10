@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Heart, Award, MapPin, Clock, Coffee, Phone } from 'lucide-react';
+import { Users, Heart, Award, MapPin, Coffee, Phone } from 'lucide-react';
 
 const About: React.FC = () => {
   const values = [
