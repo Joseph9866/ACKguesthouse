@@ -18,7 +18,6 @@ const Rooms: React.FC = () => {
     'Mini Fridge': Coffee,
     'Coffee Machine': Coffee,
   };
-  
 
   const getMinDate = () => {
     const today = new Date();
