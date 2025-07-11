@@ -1,4 +1,3 @@
-// Rooms.tsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -228,6 +227,23 @@ const Rooms: React.FC = () => {
                 <div><strong>B&B:</strong> KSh {selectedRoom.bb}</div>
                 <div><strong>Half Board:</strong> KSh {selectedRoom.half_board}</div>
                 <div><strong>Full Board:</strong> KSh {selectedRoom.full_board}</div>
+              </div>
+              <div className="mb-4">
+                <h4 className="font-semibold text-gray-900 mb-2">Notes:</h4>
+                <ul className="list-disc pl-6 space-y-2 text-gray-700">
+                  <li>Children below 3 years stay free if sharing with an adult.</li>
+                  <li>Children between 4-12 years sharing the same room with an adult will be charged 50% of the room rate.</li>
+                  <li>Children above 13 years will be charged as an adult for the room rate.</li>
+                  <li>Payments acceptable in KSh, M-Pesa, cheque.</li>
+                  <li>A deposit of half the rate is required to reserve a room.</li>
+                </ul>
+              </div>
+              <div className="mb-4">
+                <h4 className="font-semibold text-gray-900 mb-2">Conference Rates (KShs)</h4>
+                <div className="space-y-2 text-gray-700">
+                  <div><strong>Full Board Conference Package:</strong> Single: 3700, Double: 4000</div>
+                  <div><strong>Conference Package (per person):</strong> Full Day: 2500, Half Day: 1500, Full Day with Stationeries: 2800, Half Day with Stationeries: 1700</div>
+                </div>
               </div>
               <div className="flex justify-between mt-6">
                 <button

@@ -191,19 +191,19 @@ const About: React.FC = () => {
               <div className="p-6">
                 <div className="space-y-4">
                   <div className="flex justify-between items-center border-b pb-2">
-                    <span className="font-medium">50–200 pax</span>
+                    <span className="font-medium">50–200 People</span>
                     <span className="text-xl font-bold text-amber-600">KSh 10,000</span>
                   </div>
                   <div className="flex justify-between items-center border-b pb-2">
-                    <span className="font-medium">20–50 pax</span>
+                    <span className="font-medium">20–50 People</span>
                     <span className="text-xl font-bold text-amber-600">KSh 5,000</span>
                   </div>
                   <div className="flex justify-between items-center border-b pb-2">
-                    <span className="font-medium">20–30 pax</span>
+                    <span className="font-medium">20–30 People</span>
                     <span className="text-xl font-bold text-amber-600">KSh 3,000</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="font-medium">7–9 pax</span>
+                    <span className="font-medium">7–9 People</span>
                     <span className="text-xl font-bold text-amber-600">KSh 2,000</span>
                   </div>
                 </div>
