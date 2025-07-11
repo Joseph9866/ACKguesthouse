@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import {
   Users,
   Wifi,
-  Coffee,
   Tv,
   Bath,
   CheckCircle,
