@@ -27,8 +27,8 @@ const Booking: React.FC = () => {
   const calculateBookingTotal = () => {
     if (!submittedData) return 0;
     const nights = Math.ceil((new Date(submittedData.checkOut).getTime() - new Date(submittedData.checkIn).getTime()) / (1000 * 3600 * 24));
-    // This would normally come from room data, using a default price for demo
-    const roomPrice = 5000; // Default price
+    // This would normally come from room data, using full board price for demo
+    const roomPrice = 3500; // Default full board price
     return nights * roomPrice;
   };
 

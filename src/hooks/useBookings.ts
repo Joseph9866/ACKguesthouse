@@ -64,7 +64,7 @@ export const useBookings = () => {
       // Get room details to calculate total amount
       const { data: roomData, error: roomError } = await supabase
         .from('rooms')
-        .select('price')
+        .select('full_board')
         .eq('id', bookingData.roomType)
         .single();
 
@@ -77,9 +77,9 @@ export const useBookings = () => {
       const checkInDate = new Date(bookingData.checkIn);
       const checkOutDate = new Date(bookingData.checkOut);
       const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 3600 * 24));
-      const totalAmount = nights * roomData.price;
+      const totalAmount = nights * roomData.full_board;
 
-      console.log(`Calculated total: ${nights} nights × KSh ${roomData.price} = KSh ${totalAmount}`);
+      console.log(`Calculated total: ${nights} nights × KSh ${roomData.full_board} = KSh ${totalAmount}`);
 
       // Create booking
       const bookingInsert: BookingInsert = {
