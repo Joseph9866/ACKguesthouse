@@ -63,7 +63,7 @@ export const useRooms = (checkIn?: string, checkOut?: string) => {
         full_board: 6300,
         capacity: 3,
         amenities: ['Desk', 'Wardrobe', 'Private Bathroom', 'Free Wi-Fi', 'TV'],
-        image_url: 'https://jekjzdfuuudzdmdmzyjw.supabase.co/storage/v1/object/public/imagesbucket//ACKbed3.jpeg',
+        image_url: 'https://zsayrztvhbduflijzefb.supabase.co/storage/v1/object/public/imagesbucket//ACKbedview.jpeg',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         available: true
