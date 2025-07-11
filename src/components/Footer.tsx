@@ -13,13 +13,13 @@ const Footer: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-amber-400" />
                 <div>
-                  <div>+254 735 756923</div>
+                  <div>+254 720 577 442</div>
                   
                 </div>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-amber-400" />
-                <span>josekeam01@gmail.com</span>
+                <span>ackguesthsenyeri025@gmail.com</span>
               </div>
               <div className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-amber-400" />
@@ -56,7 +56,7 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Connect With Us</h3>
             <div className="flex space-x-4 mb-6">
-              <a href="#" className="bg-amber-600 p-2 rounded-full hover:bg-amber-700 transition-colors">
+              <a href="https://www.facebook.com/profile.php?id=61560022361253" className="bg-amber-600 p-2 rounded-full hover:bg-amber-700 transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
               
@@ -65,7 +65,7 @@ const Footer: React.FC = () => {
               </a>
             </div>
             <a
-              href="https://wa.me/254759750318?text=Hi, I'd like to make a booking at ACK Mt Kenya Guest House"
+              href="https://wa.me/254720577442?text=Hi, I'd like to make a booking at ACK Mt Kenya Guest House"
               className="inline-flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
             >
               <MessageCircle className="h-4 w-4" />

@@ -106,7 +106,7 @@ const Booking: React.FC = () => {
                 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <a
-                    href="tel:+254712345678"
+                    href="tel:+254720577442"
                     className="flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
                   >
                     <Phone className="h-5 w-5" />
@@ -114,7 +114,7 @@ const Booking: React.FC = () => {
                   </a>
                   
                   <a
-                    href={`https://wa.me/254712345678?text=Hi, I just submitted a booking request. Here are my details:%0A%0AName: ${submittedData.name}%0ACheck-in: ${submittedData.checkIn}%0ACheck-out: ${submittedData.checkOut}%0AGuests: ${submittedData.guests}`}
+                    href={`https://wa.me/254720577442?text=Hi, I just submitted a booking request. Here are my details:%0A%0AName: ${submittedData.name}%0ACheck-in: ${submittedData.checkIn}%0ACheck-out: ${submittedData.checkOut}%0AGuests: ${submittedData.guests}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
@@ -187,10 +187,10 @@ const Booking: React.FC = () => {
               <h3 className="text-xl font-semibold mb-2">Call Us</h3>
               <p className="text-gray-600 mb-4">Speak directly with our reservations team</p>
               <a
-                href="tel:+254759750318"
+                href="tel:+254720577442"
                 className="text-amber-600 hover:text-amber-700 font-semibold"
               >
-                +254 759 750 318
+                +254 720 577 442
               </a>
             </div>
             
@@ -199,7 +199,7 @@ const Booking: React.FC = () => {
               <h3 className="text-xl font-semibold mb-2">WhatsApp Booking</h3>
               <p className="text-gray-600 mb-4">Quick and easy booking via WhatsApp</p>
               <a
-                href="https://wa.me/254759750318?text=Hi, I'd like to make a booking at ACK Mt. Kenya Guest House"
+                href="https://wa.me/254720577442?text=Hi, I'd like to make a booking at ACK Mt. Kenya Guest House"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"

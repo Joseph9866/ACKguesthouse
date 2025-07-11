@@ -243,10 +243,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ selectedRoom, onSubmit }) => 
             <p className={`text-sm ${
               isSupabaseConnected ? 'text-green-700' : 'text-blue-700'
             }`}>
-              {isSupabaseConnected 
-                ? 'Your booking will be saved to the database and you will receive confirmation.'
-                : 'Database not available. Your booking will be simulated for demonstration purposes.'
-              }
+              
             </p>
           </div>
         </div>
