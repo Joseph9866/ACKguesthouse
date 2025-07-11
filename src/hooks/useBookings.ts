@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { supabase, testSupabaseConnection } from '../lib/supabase';
 import type { Database } from '../lib/supabase';
-import type { BookingData } from '../utils/types';
+import type { BookingData, DemoBooking, DatabaseBooking } from '../utils/types';
 
 type BookingInsert = Database['public']['Tables']['bookings']['Insert'];
 
@@ -24,8 +24,8 @@ export const useBookings = () => {
         await new Promise(resolve => setTimeout(resolve, 1500));
         
         // Store booking in localStorage for demo
-        const existingBookings = JSON.parse(localStorage.getItem('demo_bookings') || '[]');
-        const newBooking = {
+        const existingBookings = JSON.parse(localStorage.getItem('demo_bookings') || '[]') as DemoBooking[];
+        const newBooking: DemoBooking = {
           id: Date.now().toString(),
           ...bookingData,
           status: 'pending',
@@ -64,7 +64,7 @@ export const useBookings = () => {
       // Get room details to calculate total amount
       const { data: roomData, error: roomError } = await supabase
         .from('rooms')
-        .select('price')
+        .select('full_board')
         .eq('id', bookingData.roomType)
         .single();
 
@@ -77,9 +77,9 @@ export const useBookings = () => {
       const checkInDate = new Date(bookingData.checkIn);
       const checkOutDate = new Date(bookingData.checkOut);
       const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 3600 * 24));
-      const totalAmount = nights * roomData.price;
+      const totalAmount = nights * roomData.full_board;
 
-      console.log(`Calculated total: ${nights} nights × KSh ${roomData.price} = KSh ${totalAmount}`);
+      console.log(`Calculated total: ${nights} nights × KSh ${roomData.full_board} = KSh ${totalAmount}`);
 
       // Create booking
       const bookingInsert: BookingInsert = {
@@ -87,8 +87,9 @@ export const useBookings = () => {
         guest_name: bookingData.name,
         guest_email: bookingData.email,
         guest_phone: bookingData.phone,
-        check_in_date: bookingData.checkIn,
-        check_out_date: bookingData.checkOut,
+      }
+      const existingBookings = JSON.parse(localStorage.getItem('demo_bookings') || '[]') as DemoBooking[];
+      const newBooking: DemoBooking = {
         number_of_guests: bookingData.guests,
         special_requests: bookingData.specialRequests || null,
         total_amount: totalAmount,
@@ -117,7 +118,7 @@ export const useBookings = () => {
     }
   };
 
-  const getBookings = async (roomId?: string) => {
+  const getBookings = async (roomId?: string): Promise<(DemoBooking | DatabaseBooking)[]> => {
     try {
       setLoading(true);
       setError(null);
@@ -127,10 +128,10 @@ export const useBookings = () => {
       
       if (!connectionTest) {
         console.log('Getting demo bookings from localStorage...');
-        const demoBookings = JSON.parse(localStorage.getItem('demo_bookings') || '[]');
+        const demoBookings = JSON.parse(localStorage.getItem('demo_bookings') || '[]') as DemoBooking[];
         
         if (roomId) {
-          return demoBookings.filter((booking: any) => booking.roomType === roomId);
+          return demoBookings.filter((booking: DemoBooking) => booking.roomType === roomId);
         }
         
         return demoBookings;
@@ -159,7 +160,7 @@ export const useBookings = () => {
         throw new Error(`Failed to fetch bookings: ${error.message}`);
       }
 
-      return data;
+      return data as DatabaseBooking[];
     } catch (err) {
       console.error('Error fetching bookings:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch bookings');
