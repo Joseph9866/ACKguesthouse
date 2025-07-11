@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-amber-400" />
-                <span>josekeam01@gmail.com.com</span>
+                <span>josekeam01@gmail.com</span>
               </div>
               <div className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-amber-400" />
@@ -65,7 +65,7 @@ const Footer: React.FC = () => {
               </a>
             </div>
             <a
-              href="https://wa.me/254720577442?text=Hi, I'd like to make a booking at ACK Mt Kenya Guest House"
+              href="https://wa.me/254759750318?text=Hi, I'd like to make a booking at ACK Mt Kenya Guest House"
               className="inline-flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
             >
               <MessageCircle className="h-4 w-4" />
@@ -75,7 +75,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; 2025 ACK Mt. Kenay Guest House. All rights reserved.</p>
+          <p>&copy; 2025 ACK Mt. Kenya Guest House. All rights reserved.</p>
         </div>
       </div>
     </footer>

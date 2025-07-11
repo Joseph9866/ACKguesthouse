@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react';
 import { supabase, testSupabaseConnection } from '../lib/supabase';
 import type { Database } from '../lib/supabase';
 
-type Room = Database['public']['Tables']['rooms']['Row'];
+type Room = Database['public']['Tables']['rooms']['Row'] & {
+  bed_only: number;
+  bb: number;
+  half_board: number;
+  full_board: number;
+};
 
 export interface RoomWithAvailability extends Room {
   available: boolean;
@@ -20,6 +25,10 @@ export const useRooms = (checkIn?: string, checkOut?: string) => {
         name: 'Standard Single Room',
         description: 'Cozy and comfortable single room perfect for solo travelers',
         price: 3500,
+        bed_only: 1000,
+        bb: 1200,
+        half_board: 2500,
+        full_board: 3500,
         capacity: 1,
         amenities: ['Free Wi-Fi', 'Private Bathroom', 'TV', 'Desk', 'Wardrobe'],
         image_url: 'https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop',
@@ -32,6 +41,10 @@ export const useRooms = (checkIn?: string, checkOut?: string) => {
         name: 'Deluxe Double Room',
         description: 'Spacious double room with modern amenities and garden view',
         price: 5500,
+        bed_only: 1200,
+        bb: 1500,
+        half_board: 2800,
+        full_board: 4300,
         capacity: 2,
         amenities: ['Free Wi-Fi', 'Private Bathroom', 'TV', 'Mini Fridge', 'Balcony', 'Work Desk'],
         image_url: 'https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop',
@@ -44,6 +57,10 @@ export const useRooms = (checkIn?: string, checkOut?: string) => {
         name: 'Family Suite',
         description: 'Perfect for families with separate sleeping areas and living space',
         price: 8500,
+        bed_only: 2500,
+        bb: 2900,
+        half_board: 4300,
+        full_board: 6300,
         capacity: 4,
         amenities: ['Free Wi-Fi', 'Private Bathroom', 'TV', 'Mini Fridge', 'Seating Area', 'Kitchenette'],
         image_url: 'https://images.pexels.com/photos/1743229/pexels-photo-1743229.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop',
@@ -56,6 +73,10 @@ export const useRooms = (checkIn?: string, checkOut?: string) => {
         name: 'Executive Room',
         description: 'Premium room with lake view and enhanced amenities',
         price: 7500,
+        bed_only: 1500,
+        bb: 1800,
+        half_board: 3200,
+        full_board: 4500,
         capacity: 2,
         amenities: ['Free Wi-Fi', 'Private Bathroom', 'TV', 'Mini Fridge', 'Lake View', 'Work Desk', 'Coffee Machine'],
         image_url: 'https://images.pexels.com/photos/1428348/pexels-photo-1428348.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop',

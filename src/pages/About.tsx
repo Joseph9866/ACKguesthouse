@@ -86,8 +86,8 @@ const About: React.FC = () => {
                   journey should be more than just a place to sleep – it should be a home away from home.
                 </p>
                 <p>
-                  Located just minutes from Nyeri town and surrounded by stunning landscapes, we offer 
-                  our guests the perfect base to explore the region's natural wonders.
+                  Located just minutes from Nyeri town center and surrounded by stunning landscapes, we offer 
+                  our guests the perfect base to explore the region's natural wonders including Mount Kenya National Park.
                 </p>
               </div>
             </div>
@@ -158,19 +158,19 @@ const About: React.FC = () => {
                 <ul className="space-y-2">
                   <li className="flex items-start space-x-2">
                     <span className="text-amber-600 font-bold">•</span>
-                    <span>Insert something about nyeri</span>
+                    <span>5 minutes from Nyeri town center and main shopping areas</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="text-amber-600 font-bold">•</span>
-                    <span>Another one</span>
+                    <span>Close to Mount Kenya National Park and Aberdare National Park</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="text-amber-600 font-bold">•</span>
-                    <span>Another one</span>
+                    <span>Near Baden Powell Museum and other historical sites</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="text-amber-600 font-bold">•</span>
-                    <span>How many hours drive from nairobi</span>
+                    <span>2.5 hours drive from Nairobi via modern highway</span>
                   </li>
                 </ul>
               </div>
@@ -352,7 +352,7 @@ const About: React.FC = () => {
             Experience Our Hospitality
           </h2>
           <p className="text-xl text-amber-100 mb-8">
-            Join the many satisfied guests who have made ACK Mt. Kenya Guest house their home in Nyeri
+            Join the many satisfied guests who have made ACK Mt. Kenya Guest House their home in Nyeri
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a

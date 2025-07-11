@@ -39,6 +39,10 @@ export type Database = {
           name: string;
           description: string;
           price: number;
+          bed_only: number;
+          bb: number;
+          half_board: number;
+          full_board: number;
           capacity: number;
           amenities: string[];
           image_url: string | null;
@@ -50,6 +54,10 @@ export type Database = {
           name: string;
           description: string;
           price: number;
+          bed_only?: number;
+          bb?: number;
+          half_board?: number;
+          full_board?: number;
           capacity?: number;
           amenities?: string[];
           image_url?: string | null;
@@ -61,6 +69,10 @@ export type Database = {
           name?: string;
           description?: string;
           price?: number;
+          bed_only?: number;
+          bb?: number;
+          half_board?: number;
+          full_board?: number;
           capacity?: number;
           amenities?: string[];
           image_url?: string | null;
