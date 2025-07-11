@@ -1,7 +1,17 @@
 // Rooms.tsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Wifi, Coffee, Tv, Bath, CheckCircle, Calendar, AlertCircle } from 'lucide-react';
+import {
+  Users,
+  Wifi,
+  Coffee,
+  Tv,
+  Bath,
+  CheckCircle,
+  Calendar,
+  AlertCircle,
+  type LucideIcon,
+} from 'lucide-react';
 import { useRooms } from '../hooks/useRooms';
 import type { RoomWithAvailability } from '../hooks/useRooms';
 
@@ -9,10 +19,10 @@ const Rooms: React.FC = () => {
   const [selectedRoom, setSelectedRoom] = useState<RoomWithAvailability | null>(null);
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
-  
+
   const { rooms, loading, error } = useRooms(checkIn, checkOut);
 
-  const amenityIcons: { [key: string]: React.ComponentType<any> } = {
+  const amenityIcons: Record<string, LucideIcon> = {
     'Free Wi-Fi': Wifi,
     'TV': Tv,
     'Private Bathroom': Bath,
@@ -48,8 +58,8 @@ const Rooms: React.FC = () => {
         <div className="text-center">
           <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <p className="text-red-600 mb-4">Error loading rooms: {error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700"
           >
             Try Again
@@ -120,7 +130,7 @@ const Rooms: React.FC = () => {
             <div key={room.id} className="bg-white rounded-lg shadow hover:shadow-lg transition">
               <div className="relative">
                 <img
-                  src={room.image_url}
+                  src={room.image_url ?? ''}
                   alt={room.name}
                   className="w-full h-64 object-cover"
                 />
@@ -200,7 +210,7 @@ const Rooms: React.FC = () => {
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="relative">
               <img
-                src={selectedRoom.image_url}
+                src={selectedRoom.image_url ?? ''}
                 alt={selectedRoom.name}
                 className="w-full h-64 object-cover"
               />
