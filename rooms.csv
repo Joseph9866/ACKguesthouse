@@ -1,0 +1,4 @@
+name,description,bed_only,bb,half_board,full_board,capacity,image_url
+Single Room,"Ideal for solo travelers. Includes one bed and access to essential amenities.",1000,1200,2500,3500,1,https://jekjzdfuuudzdmdmzyjw.supabase.co/storage/v1/object/public/imagesbucket//ACKbed.jpeg
+Double Room,"Perfect for couples or friends. Comes with a double bed and cozy atmosphere.",1200,1500,2800,4300,2,https://jekjzdfuuudzdmdmzyjw.supabase.co/storage/v1/object/public/imagesbucket//ACKbedmain.jpeg
+Double Room + Extra Bed,"Spacious enough for a small family or group. Includes an additional bed for extra comfort.",2500,2900,4300,6300,3,https://jekjzdfuuudzdmdmzyjw.supabase.co/storage/v1/object/public/imagesbucket//ACKbed3.jpeg
