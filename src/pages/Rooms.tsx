@@ -26,8 +26,8 @@ const Rooms: React.FC = () => {
     'Free Wi-Fi': Wifi,
     'TV': Tv,
     'Private Bathroom': Bath,
-    'Mini Fridge': Coffee,
-    'Coffee Machine': Coffee,
+    'Desk': Users,
+    'Wardrobe': Users,
   };
 
   const getMinDate = () => {

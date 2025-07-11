@@ -39,14 +39,8 @@ export const COMMON_AMENITIES = [
   'Free Wi-Fi',
   'Private Bathroom',
   'TV',
-  'Mini Fridge',
-  'Work Desk',
+  'Desk',
   'Wardrobe',
-  'Balcony',
-  'Lake View',
-  'Coffee Machine',
-  'Seating Area',
-  'Kitchenette'
 ];
 
 // Pricing
