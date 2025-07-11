@@ -397,12 +397,8 @@ const BookingForm: React.FC<BookingFormProps> = ({ selectedRoom, onSubmit }) => 
             >
               <option value="">Select a room type</option>
               {rooms.map(room => (
-                <option 
-                  key={room.id} 
-                  value={room.id} 
-                  disabled={Boolean(isSupabaseConnected && !room.available)}
-                >
-                  {room.name} - KSh {room.full_board.toLocaleString()}/night (Full Board) {isSupabaseConnected && !room.available ? '(Not Available)' : ''}
+                <option key={room.id} value={room.id} disabled={isSupabaseConnected && !room.available}>
+                  {room.name} - KSh {room.price.toLocaleString()}/night {isSupabaseConnected && !room.available ? '(Not Available)' : ''}
                 </option>
               ))}
             </select>
