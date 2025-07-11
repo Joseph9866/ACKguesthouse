@@ -467,7 +467,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ selectedRoom, onSubmit }) => 
         </button>
         
         <a
-          href={`https://wa.me/254759750318?text=Hi, I'd like to make a booking:%0A%0AName: ${formData.name}%0ACheck-in: ${formData.checkIn}%0ACheck-out: ${formData.checkOut}%0AGuests: ${formData.guests}%0ARoom: ${rooms.find(r => r.id === formData.roomType)?.name}`}
+          href={`https://wa.me/254759750318?text=Hi, I'd like to make a booking:%0A%0AName: ${encodeURIComponent(formData.name)}%0ACheck-in: ${formData.checkIn}%0ACheck-out: ${formData.checkOut}%0AGuests: ${formData.guests}%0ARoom: ${encodeURIComponent(rooms.find(r => r.id === formData.roomType)?.name || '')}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center space-x-2"

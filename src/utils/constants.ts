@@ -1,7 +1,7 @@
 // Contact Information
 export const CONTACT_INFO = {
   phone: '+254 759 750 318',
-  catering_phone: '0735 756923',
+  catering_phone: '+254 735 756923',
   email: 'josekeam01@gmail.com',
   whatsapp: '+254759750318',
   address: {

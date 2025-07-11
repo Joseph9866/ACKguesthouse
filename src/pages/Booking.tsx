@@ -187,10 +187,10 @@ const Booking: React.FC = () => {
               <h3 className="text-xl font-semibold mb-2">Call Us</h3>
               <p className="text-gray-600 mb-4">Speak directly with our reservations team</p>
               <a
-                href="tel:+254712345678"
+                href="tel:+254759750318"
                 className="text-amber-600 hover:text-amber-700 font-semibold"
               >
-                +254 712 345 678
+                +254 759 750 318
               </a>
             </div>
             
@@ -199,7 +199,7 @@ const Booking: React.FC = () => {
               <h3 className="text-xl font-semibold mb-2">WhatsApp Booking</h3>
               <p className="text-gray-600 mb-4">Quick and easy booking via WhatsApp</p>
               <a
-                href="https://wa.me/254712345678?text=Hi, I'd like to make a booking at Serenity Haven Guest House"
+                href="https://wa.me/254759750318?text=Hi, I'd like to make a booking at ACK Mt. Kenya Guest House"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"

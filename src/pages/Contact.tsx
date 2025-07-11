@@ -43,14 +43,14 @@ const Contact: React.FC = () => {
                 <p className="text-gray-600">Need immediate assistance? Contact us directly:</p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <a
-                    href="tel:+254720577442"
+                    href="tel:+254759750318"
                     className="flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
                   >
                     <Phone className="h-5 w-5" />
                     <span>Call Now</span>
                   </a>
                   <a
-                    href="https://wa.me/254720577442?text=Hi, I just sent a message through your website"
+                    href="https://wa.me/254759750318?text=Hi, I just sent a message through your website"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"

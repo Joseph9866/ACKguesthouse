@@ -261,7 +261,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             <ol className="text-sm text-green-800 space-y-1">
               <li>1. Go to M-Pesa menu on your phone</li>
               <li>2. Select "Lipa na M-Pesa" → "Pay Bill"</li>
-              <li>3. Enter Business Number: <strong>174379</strong></li>
+              <li>3. Enter Business Number: <strong>522522</strong></li>
               <li>4. Enter Account Number: <strong>{bookingId.substring(0, 8)}</strong></li>
               <li>5. Enter Amount: <strong>KSh {getPaymentAmount().toLocaleString()}</strong></li>
               <li>6. Enter your M-Pesa PIN and confirm</li>
