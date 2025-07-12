@@ -1,17 +1,8 @@
 import { useState, useEffect } from 'react';
-import { supabase, testSupabaseConnection } from '../lib/supabase';
-import type { Database } from '../lib/supabase';
+import { RoomService, RoomWithAvailability } from '../services/roomService';
+import { testMongoConnection } from '../lib/mongodb';
 
-type Room = Database['public']['Tables']['rooms']['Row'] & {
-  bed_only: number;
-  bb: number;
-  half_board: number;
-  full_board: number;
-};
-
-export interface RoomWithAvailability extends Room {
-  available: boolean;
-}
+export { type RoomWithAvailability } from '../services/roomService';
 
 export const useRooms = (checkIn?: string, checkOut?: string) => {
   const [rooms, setRooms] = useState<RoomWithAvailability[]>([]);
@@ -21,7 +12,7 @@ export const useRooms = (checkIn?: string, checkOut?: string) => {
   const getFallbackRooms = (): RoomWithAvailability[] => {
     return [
       {
-        id: '1',
+        _id: '1',
         name: 'Single Room',
         description: 'Ideal for solo travelers. Includes one bed and access to essential amenities.',
         price: 3500,
@@ -32,12 +23,12 @@ export const useRooms = (checkIn?: string, checkOut?: string) => {
         capacity: 1,
         amenities: ['TV', 'Desk', 'Free Wi-Fi'],
         image_url: 'https://jekjzdfuuudzdmdmzyjw.supabase.co/storage/v1/object/public/imagesbucket//ACKbed.jpeg',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
+        created_at: new Date(),
+        updated_at: new Date(),
         available: true
-      },
+      } as RoomWithAvailability,
       {
-        id: '2',
+        _id: '2',
         name: 'Double Room',
         description: 'Perfect for couples or friends. Comes with a double bed and cozy atmosphere.',
         price: 5500,
@@ -48,12 +39,12 @@ export const useRooms = (checkIn?: string, checkOut?: string) => {
         capacity: 2,
         amenities: ['Desk', 'Wardrobe', 'Private Bathroom', 'Free Wi-Fi', 'TV'],
         image_url: 'https://jekjzdfuuudzdmdmzyjw.supabase.co/storage/v1/object/public/imagesbucket//ACKbedmain.jpeg',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
+        created_at: new Date(),
+        updated_at: new Date(),
         available: true
-      },
+      } as RoomWithAvailability,
       {
-        id: '3',
+        _id: '3',
         name: 'Double Room + Extra Bed',
         description: 'Spacious enough for a small family or group. Includes an additional bed for extra comfort.',
         price: 8500,
@@ -64,10 +55,10 @@ export const useRooms = (checkIn?: string, checkOut?: string) => {
         capacity: 3,
         amenities: ['Desk', 'Wardrobe', 'Private Bathroom', 'Free Wi-Fi', 'TV'],
         image_url: 'https://zsayrztvhbduflijzefb.supabase.co/storage/v1/object/public/imagesbucket//ACKbedview.jpeg',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
+        created_at: new Date(),
+        updated_at: new Date(),
         available: true
-      }
+      } as RoomWithAvailability
     ];
   };
 
@@ -76,26 +67,18 @@ export const useRooms = (checkIn?: string, checkOut?: string) => {
       setLoading(true);
       setError(null);
 
-      // Test Supabase connection first
-      const connectionTest = await testSupabaseConnection();
+      // Test MongoDB connection first
+      const connectionTest = await testMongoConnection();
       
       if (!connectionTest) {
-        console.warn('Supabase connection failed, using fallback data');
+        console.warn('MongoDB connection failed, using fallback data');
         setRooms(getFallbackRooms());
         return;
       }
 
-      // Fetch rooms from Supabase
-      console.log('Fetching rooms from Supabase...');
-      const { data: roomsData, error: roomsError } = await supabase
-        .from('rooms')
-        .select('*')
-        .order('price');
-
-      if (roomsError) {
-        console.error('Supabase rooms query error:', roomsError);
-        throw new Error(`Failed to fetch rooms: ${roomsError.message}`);
-      }
+      // Fetch rooms from MongoDB
+      console.log('Fetching rooms from MongoDB...');
+      const roomsData = await RoomService.getRoomsWithAvailability(checkIn, checkOut);
 
       if (!roomsData || roomsData.length === 0) {
         console.warn('No rooms found in database, using fallback data');
@@ -103,46 +86,15 @@ export const useRooms = (checkIn?: string, checkOut?: string) => {
         return;
       }
 
-      console.log(`Successfully fetched ${roomsData.length} rooms from Supabase`);
+      console.log(`Successfully fetched ${roomsData.length} rooms from MongoDB`);
+      
+      // Convert MongoDB documents to the expected format
+      const formattedRooms = roomsData.map(room => ({
+        ...room,
+        id: room._id.toString(), // Add id field for compatibility
+      }));
 
-      // Check availability for each room if dates are provided
-      const roomsWithAvailability: RoomWithAvailability[] = [];
-
-      for (const room of roomsData) {
-        let available = true;
-
-        if (checkIn && checkOut) {
-          try {
-            console.log(`Checking availability for room ${room.id}...`);
-            const { data: availabilityData, error: availabilityError } = await supabase
-              .rpc('check_room_availability', {
-                room_id_param: room.id,
-                check_in_param: checkIn,
-                check_out_param: checkOut
-              });
-
-            if (availabilityError) {
-              console.error('Availability check error for room', room.id, ':', availabilityError);
-              // Default to available if check fails
-              available = true;
-            } else {
-              available = availabilityData === true;
-              console.log(`Room ${room.id} availability:`, available);
-            }
-          } catch (err) {
-            console.error('Error checking availability for room:', room.id, err);
-            // Default to available if check fails
-            available = true;
-          }
-        }
-
-        roomsWithAvailability.push({
-          ...room,
-          available
-        });
-      }
-
-      setRooms(roomsWithAvailability);
+      setRooms(formattedRooms);
     } catch (err) {
       console.error('Error in fetchRooms:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch rooms';

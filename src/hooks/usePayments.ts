@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { supabase, testSupabaseConnection } from '../lib/supabase';
-import type { Database } from '../lib/supabase';
+import { PaymentService, PaymentCreateData } from '../services/paymentService';
+import { testMongoConnection } from '../lib/mongodb';
 import type { PaymentData, Payment } from '../utils/types';
-
-type PaymentInsert = Database['public']['Tables']['payments']['Insert'];
 
 export const usePayments = () => {
   const [loading, setLoading] = useState(false);
@@ -14,11 +12,11 @@ export const usePayments = () => {
       setLoading(true);
       setError(null);
 
-      // Test Supabase connection
-      const connectionTest = await testSupabaseConnection();
+      // Test MongoDB connection
+      const connectionTest = await testMongoConnection();
       
       if (!connectionTest) {
-        console.log('Supabase not available, simulating payment creation:', paymentData);
+        console.log('MongoDB not available, simulating payment creation:', paymentData);
         
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 1500));
@@ -39,31 +37,26 @@ export const usePayments = () => {
         return true;
       }
 
-      // Real Supabase payment logic
-      console.log('Creating payment with Supabase...');
+      // Real MongoDB payment logic
+      console.log('Creating payment with MongoDB...');
 
-      const paymentInsert: PaymentInsert = {
+      const mongoPaymentData: PaymentCreateData = {
         booking_id: paymentData.bookingId,
         amount: paymentData.amount,
         payment_type: paymentData.paymentType,
         payment_method: paymentData.paymentMethod,
-        payment_reference: paymentData.paymentReference || null,
-        status: paymentData.paymentMethod === 'cash' ? 'pending' : 'completed',
-        paid_at: paymentData.paymentMethod === 'cash' ? null : new Date().toISOString()
+        payment_reference: paymentData.paymentReference
       };
 
-      console.log('Inserting payment:', paymentInsert);
+      console.log('Creating payment:', mongoPaymentData);
 
-      const { error: insertError } = await supabase
-        .from('payments')
-        .insert(paymentInsert);
+      const payment = await PaymentService.createPayment(mongoPaymentData);
 
-      if (insertError) {
-        console.error('Payment insert error:', insertError);
-        throw new Error(`Failed to create payment: ${insertError.message}`);
+      if (!payment) {
+        throw new Error('Failed to create payment');
       }
 
-      console.log('Payment created successfully in Supabase');
+      console.log('Payment created successfully in MongoDB:', payment._id);
       return true;
     } catch (err) {
       console.error('Error creating payment:', err);
@@ -79,8 +72,8 @@ export const usePayments = () => {
       setLoading(true);
       setError(null);
 
-      // Test Supabase connection
-      const connectionTest = await testSupabaseConnection();
+      // Test MongoDB connection
+      const connectionTest = await testMongoConnection();
       
       if (!connectionTest) {
         console.log('Getting demo payments from localStorage...');
@@ -88,19 +81,22 @@ export const usePayments = () => {
         return demoPayments.filter((payment: any) => payment.bookingId === bookingId);
       }
 
-      // Real Supabase query
-      const { data, error } = await supabase
-        .from('payments')
-        .select('*')
-        .eq('booking_id', bookingId)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Payments fetch error:', error);
-        throw new Error(`Failed to fetch payments: ${error.message}`);
-      }
-
-      return data || [];
+      // Real MongoDB query
+      const payments = await PaymentService.getPaymentsByBooking(bookingId);
+      
+      // Convert MongoDB documents to expected format
+      return payments.map(payment => ({
+        id: payment._id.toString(),
+        booking_id: payment.booking_id,
+        amount: payment.amount,
+        payment_type: payment.payment_type,
+        payment_method: payment.payment_method,
+        payment_reference: payment.payment_reference,
+        status: payment.status,
+        paid_at: payment.paid_at?.toISOString(),
+        created_at: payment.created_at.toISOString(),
+        updated_at: payment.updated_at.toISOString()
+      }));
     } catch (err) {
       console.error('Error fetching payments:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch payments');
@@ -115,8 +111,8 @@ export const usePayments = () => {
       setLoading(true);
       setError(null);
 
-      // Test Supabase connection
-      const connectionTest = await testSupabaseConnection();
+      // Test MongoDB connection
+      const connectionTest = await testMongoConnection();
       
       if (!connectionTest) {
         console.log('Updating demo payment status...');
@@ -130,27 +126,9 @@ export const usePayments = () => {
         return true;
       }
 
-      // Real Supabase update
-      const updateData: any = { 
-        status,
-        updated_at: new Date().toISOString()
-      };
-
-      if (status === 'completed') {
-        updateData.paid_at = new Date().toISOString();
-      }
-
-      const { error } = await supabase
-        .from('payments')
-        .update(updateData)
-        .eq('id', paymentId);
-
-      if (error) {
-        console.error('Payment update error:', error);
-        throw new Error(`Failed to update payment: ${error.message}`);
-      }
-
-      return true;
+      // Real MongoDB update
+      const payment = await PaymentService.updatePaymentStatus(paymentId, status);
+      return !!payment;
     } catch (err) {
       console.error('Error updating payment:', err);
       setError(err instanceof Error ? err.message : 'Failed to update payment');

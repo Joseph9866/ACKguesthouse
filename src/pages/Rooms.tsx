@@ -182,7 +182,7 @@ const Rooms: React.FC = () => {
                   </button>
                   {room.available ? (
                     <Link
-                      to={`/booking?room=${room.id}`}
+                      to={`/booking?room=${room._id || room.id}`}
                       className="flex-1 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-center"
                     >
                       Book Now
@@ -254,7 +254,7 @@ const Rooms: React.FC = () => {
                 </button>
                 {selectedRoom.available && (
                   <Link
-                    to={`/booking?room=${selectedRoom.id}`}
+                    to={`/booking?room=${selectedRoom._id || selectedRoom.id}`}
                     className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md"
                     onClick={() => setSelectedRoom(null)}
                   >

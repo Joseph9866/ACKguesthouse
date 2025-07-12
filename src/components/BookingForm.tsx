@@ -3,7 +3,7 @@ import { Calendar, MessageCircle, AlertCircle, CheckCircle, Database, CreditCard
 import { useRooms } from '../hooks/useRooms';
 import { useBookings } from '../hooks/useBookings';
 import { usePayments } from '../hooks/usePayments';
-import { testSupabaseConnection } from '../lib/supabase';
+import { testMongoConnection } from '../lib/mongodb';
 import PaymentForm from './PaymentForm';
 import type { BookingData, PaymentData } from '../utils/types';
 
@@ -25,7 +25,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ selectedRoom, onSubmit }) => 
   });
 
   const [errors, setErrors] = useState<Partial<BookingData>>({});
-  const [isSupabaseConnected, setIsSupabaseConnected] = useState<boolean | null>(null);
+  const [isMongoConnected, setIsMongoConnected] = useState<boolean | null>(null);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [bookingTotal, setBookingTotal] = useState(0);
@@ -33,11 +33,11 @@ const BookingForm: React.FC<BookingFormProps> = ({ selectedRoom, onSubmit }) => 
   const { createBooking, loading: bookingLoading, error: bookingError } = useBookings();
   const { createPayment, loading: paymentLoading } = usePayments();
 
-  // Test Supabase connection on component mount
+  // Test MongoDB connection on component mount
   React.useEffect(() => {
     const checkConnection = async () => {
-      const connected = await testSupabaseConnection();
-      setIsSupabaseConnected(connected);
+      const connected = await testMongoConnection();
+      setIsMongoConnected(connected);
     };
     checkConnection();
   }, []);
@@ -84,8 +84,8 @@ const BookingForm: React.FC<BookingFormProps> = ({ selectedRoom, onSubmit }) => 
     }
 
     // Only check room availability if Supabase is connected
-    if (isSupabaseConnected) {
-      const selectedRoomData = rooms.find(room => room.id === formData.roomType);
+    if (isMongoConnected) {
+      const selectedRoomData = rooms.find(room => room._id === formData.roomType || room.id === formData.roomType);
       if (selectedRoomData && !selectedRoomData.available) {
         newErrors.roomType = 'Selected room is not available for these dates';
       }
@@ -146,9 +146,9 @@ const BookingForm: React.FC<BookingFormProps> = ({ selectedRoom, onSubmit }) => 
 
   const calculateTotal = () => {
     const nights = calculateNights();
-    const selectedRoomData = rooms.find(room => room.id === formData.roomType);
+    const selectedRoomData = rooms.find(room => room._id === formData.roomType || room.id === formData.roomType);
     if (nights > 0 && selectedRoomData) {
-      return nights * selectedRoomData.price;
+      return nights * selectedRoomData.full_board;
     }
     return 0;
   };
@@ -225,23 +225,23 @@ const BookingForm: React.FC<BookingFormProps> = ({ selectedRoom, onSubmit }) => 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Database Connection Status */}
-      {isSupabaseConnected !== null && (
+      {isMongoConnected !== null && (
         <div className={`border rounded-lg p-4 flex items-start space-x-3 ${
-          isSupabaseConnected 
+          isMongoConnected 
             ? 'bg-green-50 border-green-200' 
             : 'bg-blue-50 border-blue-200'
         }`}>
           <Database className={`h-5 w-5 mt-0.5 ${
-            isSupabaseConnected ? 'text-green-500' : 'text-blue-500'
+            isMongoConnected ? 'text-green-500' : 'text-blue-500'
           }`} />
           <div>
             <h4 className={`font-medium ${
-              isSupabaseConnected ? 'text-green-800' : 'text-blue-800'
+              isMongoConnected ? 'text-green-800' : 'text-blue-800'
             }`}>
-              {isSupabaseConnected ? 'Database Connected' : 'Demo Mode'}
+              {isMongoConnected ? 'Database Connected' : 'Demo Mode'}
             </h4>
             <p className={`text-sm ${
-              isSupabaseConnected ? 'text-green-700' : 'text-blue-700'
+              isMongoConnected ? 'text-green-700' : 'text-blue-700'
             }`}>
               
             </p>
@@ -397,8 +397,8 @@ const BookingForm: React.FC<BookingFormProps> = ({ selectedRoom, onSubmit }) => 
             >
               <option value="">Select a room type</option>
               {rooms.map(room => (
-                <option key={room.id} value={room.id} disabled={isSupabaseConnected && !room.available}>
-                  {room.name} - KSh {room.price.toLocaleString()}/night {isSupabaseConnected && !room.available ? '(Not Available)' : ''}
+                <option key={room._id || room.id} value={room._id || room.id} disabled={isMongoConnected && !room.available}>
+                  {room.name} - KSh {room.full_board.toLocaleString()}/night {isMongoConnected && !room.available ? '(Not Available)' : ''}
                 </option>
               ))}
             </select>
@@ -434,11 +434,11 @@ const BookingForm: React.FC<BookingFormProps> = ({ selectedRoom, onSubmit }) => 
             </div>
             <div className="flex justify-between">
               <span>Room:</span>
-              <span>{rooms.find(r => r.id === formData.roomType)?.name}</span>
+              <span>{rooms.find(r => r._id === formData.roomType || r.id === formData.roomType)?.name}</span>
             </div>
             <div className="flex justify-between">
               <span>Rate per night:</span>
-              <span>KSh {rooms.find(r => r.id === formData.roomType)?.full_board.toLocaleString()}</span>
+              <span>KSh {rooms.find(r => r._id === formData.roomType || r.id === formData.roomType)?.full_board.toLocaleString()}</span>
             </div>
             <hr className="border-amber-300" />
             <div className="flex justify-between font-semibold text-lg">
@@ -470,7 +470,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ selectedRoom, onSubmit }) => 
         </button>
         
         <a
-          href={`https://wa.me/254759750318?text=Hi, I'd like to make a booking:%0A%0AName: ${encodeURIComponent(formData.name)}%0ACheck-in: ${formData.checkIn}%0ACheck-out: ${formData.checkOut}%0AGuests: ${formData.guests}%0ARoom: ${encodeURIComponent(rooms.find(r => r.id === formData.roomType)?.name || '')}`}
+          href={`https://wa.me/254720577442?text=Hi, I'd like to make a booking:%0A%0AName: ${encodeURIComponent(formData.name)}%0ACheck-in: ${formData.checkIn}%0ACheck-out: ${formData.checkOut}%0AGuests: ${formData.guests}%0ARoom: ${encodeURIComponent(rooms.find(r => r._id === formData.roomType || r.id === formData.roomType)?.name || '')}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center space-x-2"

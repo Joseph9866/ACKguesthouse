@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { supabase, testSupabaseConnection } from '../lib/supabase';
-import type { Database } from '../lib/supabase';
-import type { BookingData, DemoBooking, DatabaseBooking } from '../utils/types';
-
-type BookingInsert = Database['public']['Tables']['bookings']['Insert'];
+import { BookingService, BookingCreateData } from '../services/bookingService';
+import { testMongoConnection } from '../lib/mongodb';
+import type { BookingData, DemoBooking } from '../utils/types';
 
 export const useBookings = () => {
   const [loading, setLoading] = useState(false);
@@ -14,11 +12,11 @@ export const useBookings = () => {
       setLoading(true);
       setError(null);
 
-      // Test Supabase connection
-      const connectionTest = await testSupabaseConnection();
+      // Test MongoDB connection
+      const connectionTest = await testMongoConnection();
       
       if (!connectionTest) {
-        console.log('Supabase not available, simulating booking creation:', bookingData);
+        console.log('MongoDB not available, simulating booking creation:', bookingData);
         
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 1500));
@@ -38,76 +36,48 @@ export const useBookings = () => {
         return true;
       }
 
-      // Real Supabase booking logic
-      console.log('Creating booking with Supabase...');
+      // Real MongoDB booking logic
+      console.log('Creating booking with MongoDB...');
 
-      // First check if room is available
-      console.log('Checking room availability...');
-      const { data: isAvailable, error: availabilityError } = await supabase
-        .rpc('check_room_availability', {
-          room_id_param: bookingData.roomType,
-          check_in_param: bookingData.checkIn,
-          check_out_param: bookingData.checkOut
-        });
-
-      if (availabilityError) {
-        console.error('Availability check error:', availabilityError);
-        throw new Error(`Failed to check room availability: ${availabilityError.message}`);
-      }
-
-      if (!isAvailable) {
-        throw new Error('Room is not available for the selected dates');
-      }
-
-      console.log('Room is available, proceeding with booking...');
-
-      // Get room details to calculate total amount
-      const { data: roomData, error: roomError } = await supabase
-        .from('rooms')
-        .select('full_board')
-        .eq('id', bookingData.roomType)
-        .single();
-
-      if (roomError || !roomData) {
-        console.error('Room fetch error:', roomError);
-        throw new Error(`Failed to get room details: ${roomError?.message || 'Room not found'}`);
-      }
-
-      // Calculate total amount
+      // Calculate total amount (this would normally come from room data)
       const checkInDate = new Date(bookingData.checkIn);
       const checkOutDate = new Date(bookingData.checkOut);
       const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 3600 * 24));
-      const totalAmount = nights * roomData.full_board;
+      
+      // Default pricing - in a real app, you'd fetch this from the room
+      const roomPricing: { [key: string]: number } = {
+        '1': 3500, // Single room full board
+        '2': 4300, // Double room full board
+        '3': 6300  // Family room full board
+      };
+      
+      const pricePerNight = roomPricing[bookingData.roomType] || 3500;
+      const totalAmount = nights * pricePerNight;
 
-      console.log(`Calculated total: ${nights} nights × KSh ${roomData.full_board} = KSh ${totalAmount}`);
+      console.log(`Calculated total: ${nights} nights × KSh ${pricePerNight} = KSh ${totalAmount}`);
 
-      // Create booking
-      const bookingInsert: BookingInsert = {
+      // Create booking data for MongoDB
+      const mongoBookingData: BookingCreateData = {
         room_id: bookingData.roomType,
         guest_name: bookingData.name,
         guest_email: bookingData.email,
         guest_phone: bookingData.phone,
-      }
-      const existingBookings = JSON.parse(localStorage.getItem('demo_bookings') || '[]') as DemoBooking[];
-      const newBooking: DemoBooking = {
+        check_in_date: bookingData.checkIn,
+        check_out_date: bookingData.checkOut,
         number_of_guests: bookingData.guests,
-        special_requests: bookingData.specialRequests || null,
-        total_amount: totalAmount,
-        status: 'pending'
+        special_requests: bookingData.specialRequests || undefined,
+        total_amount: totalAmount
       };
 
-      console.log('Inserting booking:', bookingInsert);
+      console.log('Creating booking:', mongoBookingData);
 
-      const { error: insertError } = await supabase
-        .from('bookings')
-        .insert(bookingInsert);
+      const booking = await BookingService.createBooking(mongoBookingData);
 
-      if (insertError) {
-        console.error('Booking insert error:', insertError);
-        throw new Error(`Failed to create booking: ${insertError.message}`);
+      if (!booking) {
+        throw new Error('Failed to create booking');
       }
 
-      console.log('Booking created successfully in Supabase');
+      console.log('Booking created successfully in MongoDB:', booking._id);
       return true;
     } catch (err) {
       console.error('Error creating booking:', err);
@@ -118,13 +88,13 @@ export const useBookings = () => {
     }
   };
 
-  const getBookings = async (roomId?: string): Promise<(DemoBooking | DatabaseBooking)[]> => {
+  const getBookings = async (roomId?: string) => {
     try {
       setLoading(true);
       setError(null);
 
-      // Test Supabase connection
-      const connectionTest = await testSupabaseConnection();
+      // Test MongoDB connection
+      const connectionTest = await testMongoConnection();
       
       if (!connectionTest) {
         console.log('Getting demo bookings from localStorage...');
@@ -137,30 +107,15 @@ export const useBookings = () => {
         return demoBookings;
       }
 
-      // Real Supabase query
-      let query = supabase
-        .from('bookings')
-        .select(`
-          *,
-          rooms (
-            name,
-            price
-          )
-        `)
-        .order('created_at', { ascending: false });
-
+      // Real MongoDB query
+      let bookings;
       if (roomId) {
-        query = query.eq('room_id', roomId);
+        bookings = await BookingService.getBookingsByRoom(roomId);
+      } else {
+        bookings = await BookingService.getAllBookings();
       }
 
-      const { data, error } = await query;
-
-      if (error) {
-        console.error('Bookings fetch error:', error);
-        throw new Error(`Failed to fetch bookings: ${error.message}`);
-      }
-
-      return data as DatabaseBooking[];
+      return bookings;
     } catch (err) {
       console.error('Error fetching bookings:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch bookings');

@@ -1,96 +1,49 @@
-import { supabase } from './supabase';
-import type { Database } from './supabase';
+import { RoomService } from '../services/roomService';
+import { BookingService } from '../services/bookingService';
+import { PaymentService } from '../services/paymentService';
 
 // Database helper functions for common operations
 export class DatabaseService {
   // Room operations
   static async getAllRooms() {
-    const { data, error } = await supabase
-      .from('rooms')
-      .select('*')
-      .order('price');
-    
-    if (error) throw error;
-    return data;
+    return await RoomService.getAllRooms();
   }
 
   static async getRoomById(id: string) {
-    const { data, error } = await supabase
-      .from('rooms')
-      .select('*')
-      .eq('id', id)
-      .single();
-    
-    if (error) throw error;
-    return data;
+    return await RoomService.getRoomById(id);
   }
 
   static async checkRoomAvailability(roomId: string, checkIn: string, checkOut: string) {
-    const { data, error } = await supabase
-      .rpc('check_room_availability', {
-        room_id_param: roomId,
-        check_in_param: checkIn,
-        check_out_param: checkOut
-      });
-    
-    if (error) throw error;
-    return data;
+    return await RoomService.checkRoomAvailability(roomId, checkIn, checkOut);
   }
 
   // Booking operations
-  static async createBooking(booking: Database['public']['Tables']['bookings']['Insert']) {
-    const { data, error } = await supabase
-      .from('bookings')
-      .insert(booking)
-      .select()
-      .single();
-    
-    if (error) throw error;
-    return data;
+  static async createBooking(bookingData: any) {
+    return await BookingService.createBooking(bookingData);
   }
 
   static async getBookingsByRoom(roomId: string) {
-    const { data, error } = await supabase
-      .from('bookings')
-      .select(`
-        *,
-        rooms (
-          name,
-          price
-        )
-      `)
-      .eq('room_id', roomId)
-      .order('created_at', { ascending: false });
-    
-    if (error) throw error;
-    return data;
+    return await BookingService.getBookingsByRoom(roomId);
   }
 
   static async getAllBookings() {
-    const { data, error } = await supabase
-      .from('bookings')
-      .select(`
-        *,
-        rooms (
-          name,
-          price
-        )
-      `)
-      .order('created_at', { ascending: false });
-    
-    if (error) throw error;
-    return data;
+    return await BookingService.getAllBookings();
   }
 
   static async updateBookingStatus(bookingId: string, status: 'pending' | 'confirmed' | 'cancelled' | 'completed') {
-    const { data, error } = await supabase
-      .from('bookings')
-      .update({ status })
-      .eq('id', bookingId)
-      .select()
-      .single();
-    
-    if (error) throw error;
-    return data;
+    return await BookingService.updateBookingStatus(bookingId, status);
+  }
+
+  // Payment operations
+  static async createPayment(paymentData: any) {
+    return await PaymentService.createPayment(paymentData);
+  }
+
+  static async getPaymentsByBooking(bookingId: string) {
+    return await PaymentService.getPaymentsByBooking(bookingId);
+  }
+
+  static async updatePaymentStatus(paymentId: string, status: 'pending' | 'completed' | 'failed' | 'refunded') {
+    return await PaymentService.updatePaymentStatus(paymentId, status);
   }
 }
