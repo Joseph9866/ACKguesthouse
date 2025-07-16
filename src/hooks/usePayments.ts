@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { PaymentService, PaymentCreateData } from '../services/paymentService';
-import { testMongoConnection } from '../lib/mongodb';
+import { testMongoConnection } from '../lib/mongoose';
 import type { PaymentData, Payment } from '../utils/types';
 
 export const usePayments = () => {
@@ -138,10 +138,48 @@ export const usePayments = () => {
     }
   };
 
+  const getPaymentStats = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const connectionTest = await testMongoConnection();
+      
+      if (!connectionTest) {
+        // Return demo stats
+        const demoPayments = JSON.parse(localStorage.getItem('demo_payments') || '[]');
+        const completedPayments = demoPayments.filter((p: any) => p.status === 'completed');
+        
+        return {
+          totalRevenue: completedPayments.reduce((sum: number, p: any) => sum + p.amount, 0),
+          totalDeposits: completedPayments.filter((p: any) => p.payment_type === 'deposit').reduce((sum: number, p: any) => sum + p.amount, 0),
+          totalBalance: completedPayments.filter((p: any) => p.payment_type === 'balance').reduce((sum: number, p: any) => sum + p.amount, 0),
+          completedPayments: completedPayments.length,
+          pendingPayments: demoPayments.filter((p: any) => p.status === 'pending').length
+        };
+      }
+
+      return await PaymentService.getPaymentStats();
+    } catch (err) {
+      console.error('Error fetching payment stats:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch payment stats');
+      return {
+        totalRevenue: 0,
+        totalDeposits: 0,
+        totalBalance: 0,
+        completedPayments: 0,
+        pendingPayments: 0
+      };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     createPayment,
     getPaymentsByBooking,
     updatePaymentStatus,
+    getPaymentStats,
     loading,
     error
   };

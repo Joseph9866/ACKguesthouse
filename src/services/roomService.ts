@@ -1,4 +1,4 @@
-import { connectToDatabase } from '../lib/mongodb';
+import { connectToDatabase } from '../lib/mongoose';
 import { Room, IRoom } from '../models/Room';
 import { Booking } from '../models/Booking';
 

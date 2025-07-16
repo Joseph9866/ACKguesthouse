@@ -3,7 +3,7 @@ import { Calendar, MessageCircle, AlertCircle, CheckCircle, Database, CreditCard
 import { useRooms } from '../hooks/useRooms';
 import { useBookings } from '../hooks/useBookings';
 import { usePayments } from '../hooks/usePayments';
-import { testMongoConnection } from '../lib/mongodb';
+import { testMongoConnection } from '../lib/mongoose';
 import PaymentForm from './PaymentForm';
 import type { BookingData, PaymentData } from '../utils/types';
 

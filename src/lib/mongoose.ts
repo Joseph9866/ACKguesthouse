@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const MONGODB_URI = import.meta.env.VITE_MONGODB_URI || 'mongodb://localhost:27017/ack-guest-house';
 
 if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable');
+  throw new Error('Please define the VITE_MONGODB_URI environment variable');
 }
 
 interface MongooseCache {
@@ -37,11 +37,11 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
 
   try {
     cached!.conn = await cached!.promise;
-    console.log('Connected to MongoDB successfully');
+    console.log('✅ Connected to MongoDB successfully');
     return cached!.conn;
   } catch (e) {
     cached!.promise = null;
-    console.error('MongoDB connection error:', e);
+    console.error('❌ MongoDB connection error:', e);
     throw e;
   }
 }

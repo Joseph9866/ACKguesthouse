@@ -1,4 +1,4 @@
-import { connectToDatabase } from '../lib/mongodb';
+import { connectToDatabase } from '../lib/mongoose';
 import { Payment, IPayment } from '../models/Payment';
 import { BookingService } from './bookingService';
 
@@ -91,5 +91,64 @@ export class PaymentService {
   static async getAllPayments(): Promise<IPayment[]> {
     await connectToDatabase();
     return await Payment.find({}).sort({ created_at: -1 });
+  }
+
+  static async getPaymentStats(): Promise<{
+    totalRevenue: number;
+    totalDeposits: number;
+    totalBalance: number;
+    completedPayments: number;
+    pendingPayments: number;
+  }> {
+    await connectToDatabase();
+    
+    const stats = await Payment.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalRevenue: {
+            $sum: {
+              $cond: [{ $eq: ['$status', 'completed'] }, '$amount', 0]
+            }
+          },
+          totalDeposits: {
+            $sum: {
+              $cond: [
+                { $and: [{ $eq: ['$status', 'completed'] }, { $eq: ['$payment_type', 'deposit'] }] },
+                '$amount',
+                0
+              ]
+            }
+          },
+          totalBalance: {
+            $sum: {
+              $cond: [
+                { $and: [{ $eq: ['$status', 'completed'] }, { $eq: ['$payment_type', 'balance'] }] },
+                '$amount',
+                0
+              ]
+            }
+          },
+          completedPayments: {
+            $sum: {
+              $cond: [{ $eq: ['$status', 'completed'] }, 1, 0]
+            }
+          },
+          pendingPayments: {
+            $sum: {
+              $cond: [{ $eq: ['$status', 'pending'] }, 1, 0]
+            }
+          }
+        }
+      }
+    ]);
+
+    return stats[0] || {
+      totalRevenue: 0,
+      totalDeposits: 0,
+      totalBalance: 0,
+      completedPayments: 0,
+      pendingPayments: 0
+    };
   }
 }

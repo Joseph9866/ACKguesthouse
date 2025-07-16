@@ -17,6 +17,10 @@ export class DatabaseService {
     return await RoomService.checkRoomAvailability(roomId, checkIn, checkOut);
   }
 
+  static async getRoomsWithAvailability(checkIn?: string, checkOut?: string) {
+    return await RoomService.getRoomsWithAvailability(checkIn, checkOut);
+  }
+
   // Booking operations
   static async createBooking(bookingData: any) {
     return await BookingService.createBooking(bookingData);
@@ -34,6 +38,10 @@ export class DatabaseService {
     return await BookingService.updateBookingStatus(bookingId, status);
   }
 
+  static async getBookingStats() {
+    return await BookingService.getBookingStats();
+  }
+
   // Payment operations
   static async createPayment(paymentData: any) {
     return await PaymentService.createPayment(paymentData);
@@ -45,5 +53,9 @@ export class DatabaseService {
 
   static async updatePaymentStatus(paymentId: string, status: 'pending' | 'completed' | 'failed' | 'refunded') {
     return await PaymentService.updatePaymentStatus(paymentId, status);
+  }
+
+  static async getPaymentStats() {
+    return await PaymentService.getPaymentStats();
   }
 }

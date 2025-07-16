@@ -1,4 +1,4 @@
-import { connectToDatabase } from '../lib/mongodb';
+import { connectToDatabase } from '../lib/mongoose';
 import { Room } from '../models/Room';
 
 const seedRooms = async () => {
@@ -7,6 +7,7 @@ const seedRooms = async () => {
     
     // Clear existing rooms
     await Room.deleteMany({});
+    console.log('🗑️ Cleared existing rooms');
     
     // Insert seed data
     const rooms = [
@@ -19,7 +20,7 @@ const seedRooms = async () => {
         half_board: 2500,
         full_board: 3500,
         capacity: 1,
-        amenities: ['TV', 'Desk', 'Free Wi-Fi'],
+        amenities: ['Free Wi-Fi', 'Private Bathroom', 'TV', 'Desk', 'Wardrobe'],
         image_url: 'https://jekjzdfuuudzdmdmzyjw.supabase.co/storage/v1/object/public/imagesbucket//ACKbed.jpeg'
       },
       {
@@ -31,7 +32,7 @@ const seedRooms = async () => {
         half_board: 2800,
         full_board: 4300,
         capacity: 2,
-        amenities: ['Desk', 'Wardrobe', 'Private Bathroom', 'Free Wi-Fi', 'TV'],
+        amenities: ['Free Wi-Fi', 'Private Bathroom', 'TV', 'Desk', 'Wardrobe', 'Mini Fridge'],
         image_url: 'https://jekjzdfuuudzdmdmzyjw.supabase.co/storage/v1/object/public/imagesbucket//ACKbedmain.jpeg'
       },
       {
@@ -43,17 +44,22 @@ const seedRooms = async () => {
         half_board: 4300,
         full_board: 6300,
         capacity: 3,
-        amenities: ['Desk', 'Wardrobe', 'Private Bathroom', 'Free Wi-Fi', 'TV'],
-        image_url: 'https://zsayrztvhbduflijzefb.supabase.co/storage/v1/object/public/imagesbucket//ACKbedview.jpeg'
+        amenities: ['Free Wi-Fi', 'Private Bathroom', 'TV', 'Desk', 'Wardrobe', 'Mini Fridge', 'Seating Area'],
+        image_url: 'https://jekjzdfuuudzdmdmzyjw.supabase.co/storage/v1/object/public/imagesbucket//ACKbed3.jpeg'
       }
     ];
 
     const createdRooms = await Room.insertMany(rooms);
-    console.log(`Successfully seeded ${createdRooms.length} rooms`);
+    console.log(`✅ Successfully seeded ${createdRooms.length} rooms`);
+    
+    // Display created rooms
+    createdRooms.forEach(room => {
+      console.log(`📍 ${room.name}: KSh ${room.full_board} (${room.capacity} guests)`);
+    });
     
     return createdRooms;
   } catch (error) {
-    console.error('Error seeding database:', error);
+    console.error('❌ Error seeding database:', error);
     throw error;
   }
 };
@@ -65,11 +71,11 @@ export { seedRooms };
 if (import.meta.url === `file://${process.argv[1]}`) {
   seedRooms()
     .then(() => {
-      console.log('Database seeding completed');
+      console.log('🎉 Database seeding completed successfully');
       process.exit(0);
     })
     .catch((error) => {
-      console.error('Database seeding failed:', error);
+      console.error('💥 Database seeding failed:', error);
       process.exit(1);
     });
 }

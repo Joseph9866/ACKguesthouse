@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { BookingService, BookingCreateData } from '../services/bookingService';
-import { testMongoConnection } from '../lib/mongodb';
+import { testMongoConnection } from '../lib/mongoose';
 import type { BookingData, DemoBooking } from '../utils/types';
 
 export const useBookings = () => {
@@ -125,9 +125,45 @@ export const useBookings = () => {
     }
   };
 
+  const getBookingStats = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const connectionTest = await testMongoConnection();
+      
+      if (!connectionTest) {
+        // Return demo stats
+        const demoBookings = JSON.parse(localStorage.getItem('demo_bookings') || '[]') as DemoBooking[];
+        return {
+          total: demoBookings.length,
+          pending: demoBookings.filter(b => b.status === 'pending').length,
+          confirmed: demoBookings.filter(b => b.status === 'confirmed').length,
+          completed: demoBookings.filter(b => b.status === 'completed').length,
+          cancelled: demoBookings.filter(b => b.status === 'cancelled').length
+        };
+      }
+
+      return await BookingService.getBookingStats();
+    } catch (err) {
+      console.error('Error fetching booking stats:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch booking stats');
+      return {
+        total: 0,
+        pending: 0,
+        confirmed: 0,
+        completed: 0,
+        cancelled: 0
+      };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     createBooking,
     getBookings,
+    getBookingStats,
     loading,
     error
   };

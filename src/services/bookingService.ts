@@ -1,4 +1,4 @@
-import { connectToDatabase } from '../lib/mongodb';
+import { connectToDatabase } from '../lib/mongoose';
 import { Booking, IBooking } from '../models/Booking';
 import { Room } from '../models/Room';
 import { RoomService } from './roomService';
@@ -120,5 +120,39 @@ export class BookingService {
         }
       ]
     }).sort({ check_in_date: 1 });
+  }
+
+  static async getBookingStats(): Promise<{
+    total: number;
+    pending: number;
+    confirmed: number;
+    completed: number;
+    cancelled: number;
+  }> {
+    await connectToDatabase();
+    
+    const stats = await Booking.aggregate([
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    const result = {
+      total: 0,
+      pending: 0,
+      confirmed: 0,
+      completed: 0,
+      cancelled: 0
+    };
+
+    stats.forEach(stat => {
+      result[stat._id as keyof typeof result] = stat.count;
+      result.total += stat.count;
+    });
+
+    return result;
   }
 }
