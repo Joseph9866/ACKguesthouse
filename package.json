@@ -7,13 +7,20 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seed": "tsx src/scripts/seedDatabase.ts",
+    "db:seed": "tsx src/scripts/seedDatabase.ts",
+    "db:connect": "tsx -e \"import { connectToDatabase } from './src/lib/mongoose'; connectToDatabase().then(() => console.log('Connected!')).catch(console.error)\""
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.50.3",
     "@types/mongoose": "^5.11.97",
+    "dotenv": "^16.4.5",
+    "@types/mongoose": "^5.11.96",
     "dotenv": "^17.2.0",
     "lucide-react": "^0.344.0",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.1.1",
     "mongodb": "^6.17.0",
     "mongoose": "^8.16.3",
     "react": "^18.3.1",
